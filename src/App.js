@@ -21,22 +21,21 @@ function App() {
   }, [])
 
   async function handleAddRepository() {
-    // if (!title || !url || techs.length === 0) {
-    //   return alert('há campos em branco!')
-    // }
-    api.get('repositories')
-      .then(resp => {
-        setRepositories(resp.data)
-      })
+    console.log(techs.length);
+
+    if (!title || !url || techs.length === 0) {
+      return alert('há campos em branco!')
+    }
+
     const data = {
       "title": title,
       "url": url,
       "techs": techs
     }
     try {
-    const newRep = await api.post('repositories', data)
+      const newRep = await api.post('repositories', data)
 
-    setRepositories([ ...repositories, newRep.data ])
+      setRepositories([ ...repositories, newRep.data ])
     } catch (error) { console.log(error) }
   }
 
@@ -75,28 +74,28 @@ function App() {
           type="text"
           name="title"
           value={techs}
-          onChange={e => setTechs(e.target.value.split(','))}
+          onChange={e => setTechs(e.target.value ? e.target.value.split(',') : [])}
         />
 
-      <button className="addButton" onClick={handleAddRepository}>Adicionar</button>
+        <button className="addButton" onClick={handleAddRepository}>Adicionar</button>
 
-      <hr />
-      <h2>List of Repositories </h2>({repositories.length} repositories!)<br />
-      <ul data-testid="repository-list">
-        {repositories.map(rep => (
-          <li key={rep.id}>
-            <p>{rep.title}</p>
-            <a href={rep.url} target="_blank" rel="noopener noreferrer">Link</a>
-            {rep.techs ? rep.techs.join(', ') : ''}
+        <hr />
+        <h2>List of Repositories </h2>({repositories.length} repositories!)<br />
+        <ul data-testid="repository-list">
+          {repositories.map(rep => (
+            <li key={rep.id}>
+              <p>{rep.title}</p>
+              <a href={rep.url} target="_blank" rel="noopener noreferrer">Link</a>
+              {rep.techs ? rep.techs.join(', ') : ''}
 
-            <button onClick={() => handleRemoveRepository(rep.id)}>Remover</button>
-          </li>
-        ))}
+              <button onClick={() => handleRemoveRepository(rep.id)}>Remover</button>
+            </li>
+          ))}
 
-      </ul>
+        </ul>
 
-    </div>
-    // </div >
+      </div>
+    </div >
   );
 }
 
